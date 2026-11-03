@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduStream - Continuar Assistindo</title>
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/equipe3.css">
+</head>
+<body>
+  <header class="cabecalho">
+    <nav class="navegacao">
+      <a href="../index.html" class="logo">EduStream</a>
+      <ul class="menu">
+        <li><a href="../index.html">Início</a></li>
+        <li><a href="continuar.html" class="ativo">Continuar Assistindo</a></li>
+        <li><a href="historico.html">Histórico</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="conteudo-principal">
+    <section class="secao-continuar">
+      <h1>Continuar Assistindo</h1>
+      <p class="descricao-pagina">Retome seus vídeos e conteúdos de onde parou.</p>
+
+      <!-- Mensagem de feedback/erro para o usuário -->
+      <div id="mensagem-status" class="mensagem-status" style="display: none;"></div>
+
+      <!-- Container onde a lista de conteúdos será renderizada -->
+      <div id="lista-continuar" class="grid-card-conteudo">
+        <p class="carregando">Carregando seus conteúdos...</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <p>&copy; EduStream - Projeto Educacional</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/equipe3/continuar.js"></script>
+</body>
+</html>
