@@ -1,0 +1,46 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduStream - Catálogo de Conteúdos</title>
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/equipe1.css">
+  <link rel="stylesheet" href="../assets/css/equipe2.css">
+</head>
+<body>
+  <header>
+    <h1>EduStream</h1>
+    <nav>
+      <a href="../index.html">Início</a>
+      <a href="conteúdos.html">Catálogo</a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Catálogo de conteúdos</h2>
+      <p>Encontre vídeos e materiais para estudar.</p>
+
+      <label for="filtro-categoria">Filtrar por categoria:</label>
+      <select id="filtro-categoria">
+        <option value="">Todas as categorias</option>
+      </select>
+
+      <p id="mensagem" role="status" aria-live="polite"></p>
+
+      <section id="lista-conteudos" aria-label="Lista de conteúdos">
+        <!-- Os conteúdos serão carregados pelo JavaScript. -->
+      </section>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/equipe2/conteudos.js"></script>
+</body>
+</html>
+```
