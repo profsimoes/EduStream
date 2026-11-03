@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduStream - Avaliações</title>
+
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/equipe4.css">
+</head>
+<body>
+
+  <main class="pagina-avaliacoes">
+
+    <header class="cabecalho-pagina">
+      <h1>Avaliar conteúdos</h1>
+      <p>
+        Compartilhe sua opinião sobre os conteúdos que você concluiu.
+      </p>
+    </header>
+
+    <section class="secao-avaliacoes">
+
+      <h2>Conteúdos disponíveis para avaliação</h2>
+
+      <div id="mensagem-avaliacoes" class="mensagem" role="status">
+        Carregando conteúdos...
+      </div>
+
+      <div id="lista-conteudos-avaliar" class="lista-avaliacoes"></div>
+
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/equipe4/avaliacoes.js"></script>
+
+</body>
+</html>
