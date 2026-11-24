@@ -27,9 +27,26 @@
 
   // ---------- CONFIGURAÇÕES (fáceis de alterar) ----------
 
-  // ATENÇÃO: nome da variável do cliente Supabase criada em supabase-client.js.
-  // Se no seu arquivo o nome for outro, troque somente aqui.
-  const db = supabaseClient;
+  // Procura o cliente Supabase criado em supabase-client.js / supabase-config.js.
+  // Testa os nomes mais comuns; "typeof" evita erro se a variável não existir.
+  function encontrarCliente() {
+    if (typeof supabaseClient !== 'undefined') return supabaseClient;
+    if (typeof clienteSupabase !== 'undefined') return clienteSupabase;
+    if (typeof supabaseCliente !== 'undefined') return supabaseCliente;
+    // Se a variável se chamar "supabase" e já for o cliente (e não a biblioteca)
+    if (typeof supabase !== 'undefined' && typeof supabase.from === 'function') return supabase;
+    return null;
+  }
+
+  const db = encontrarCliente();
+
+  // Se não achou, mostra no console qual é o problema e para o script.
+  if (!db) {
+    console.error('cadastro.js: cliente Supabase não encontrado. ' +
+      'Abra supabase-client.js, veja o nome da variável criada com createClient(...) ' +
+      'e coloque esse nome na função encontrarCliente().');
+    return;
+  }
 
   const TAMANHO_MINIMO_SENHA = 6;        // mínimo de caracteres da senha
   const TIPO_PERFIL_PADRAO = 'aluno';    // todo novo cadastro entra como aluno
@@ -146,6 +163,35 @@
     if (error) throw error;
   }
 
+  /**
+   * Transforma o erro técnico do Supabase em uma mensagem que ajuda a achar o problema.
+   * O texto original também aparece no Console (F12) com console.error.
+   */
+  function descreverErro(erro) {
+    const codigo = erro && erro.code ? erro.code : '';
+    const texto = erro && erro.message ? erro.message : 'erro desconhecido';
+
+    if (codigo === '42501') {
+      return 'Banco bloqueou a operação (RLS/permissão). Detalhe: ' + texto;
+    }
+    if (codigo === '23502') {
+      return 'Campo obrigatório sem valor no banco (ex.: id_usuario sem auto-incremento). Detalhe: ' + texto;
+    }
+    if (codigo === '23503') {
+      return 'id_perfil não existe na tabela perfil. Detalhe: ' + texto;
+    }
+    if (codigo === '23505') {
+      return 'Registro duplicado (e-mail ou id já existe). Detalhe: ' + texto;
+    }
+    if (codigo === '23514') {
+      return 'Valor recusado por regra do banco (ex.: tipo_perfil). Detalhe: ' + texto;
+    }
+    if (codigo === '42P01') {
+      return 'Tabela não encontrada no banco. Detalhe: ' + texto;
+    }
+    return 'Não foi possível concluir o cadastro. Detalhe: ' + texto;
+  }
+
   // ---------- FLUXO PRINCIPAL ----------
 
   /**
@@ -193,7 +239,7 @@
     } catch (erro) {
       // Qualquer problema inesperado (internet, banco, etc.) cai aqui
       console.error('Erro no cadastro:', erro);
-      mostrarMensagem('Não foi possível concluir o cadastro. Tente novamente.', false);
+      mostrarMensagem(descreverErro(erro), false);
       botaoEnviar.disabled = false;
     }
   }
