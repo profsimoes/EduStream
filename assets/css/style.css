@@ -273,6 +273,7 @@ footer {
   height: 38px;
   width: auto;
   object-fit: contain;
+  align-items: center;
 }
 
 @media (max-width: 640px) {
