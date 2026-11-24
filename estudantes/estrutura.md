@@ -20,7 +20,7 @@ EduStream/
 │       ├── supabase-client.js
 │       ├── utils.js
 │       ├── equipe1/
-│       │   ├── login.js               (A criar)
+│       │   ├── login.js               
 │       │   ├── cadastro.js            (A criar)
 │       │   └── usuarios.js            (A criar)
 │       ├── equipe2/
