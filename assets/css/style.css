@@ -1,0 +1,180 @@
+/* assets/css/style.css - Design System Base EduStream */
+:root {
+  --bg-dark: #0b0f19;
+  --bg-card: #131b2e;
+  --bg-input: #0f172a;
+  --border: #1e293b;
+  --primary: #0284c7;
+  --primary-hover: #38bdf8;
+  --accent: #6366f1;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --success: #10b981;
+  --danger: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Cabeçalho e Navegação Unificada */
+header {
+  background-color: rgba(19, 27, 46, 0.95);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+header h1, .brand {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+header h1 span, .brand span {
+  color: var(--primary-hover);
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+nav a:hover, nav a.active {
+  background-color: rgba(56, 189, 248, 0.15);
+  color: var(--primary-hover);
+}
+
+/* Container Principal */
+main, .container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+/* Cards e Grids (Catálogo, Avaliações, Indicadores) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary-hover);
+}
+
+/* Formulários e Inputs (Login, Cadastros, Filtros) */
+form, .form-box {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 480px;
+  margin: 1.5rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary-hover);
+}
+
+/* Botões */
+button, .btn {
+  background-color: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 0.95rem;
+}
+
+button:hover, .btn:hover {
+  background-color: var(--primary-hover);
+  color: #0b0f19;
+}
+
+/* Tabelas (Histórico, Logs, Usuários) */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--bg-card);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+th, td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+th {
+  background-color: rgba(15, 23, 42, 0.8);
+  color: var(--primary-hover);
+  font-weight: 700;
+}
+
+/* Responsividade Mobile */
+@media (max-width: 640px) {
+  header { padding: 1rem; }
+  main, .container { padding: 0 1rem; }
+}
