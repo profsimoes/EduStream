@@ -1,45 +1,71 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduStream - Catálogo de Conteúdos</title>
+
   <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
 
-  <!-- Cabeçalho Único (Injetado pelo layout.js) -->
+  <!-- Cabeçalho injetado pelo layout.js -->
   <div id="app-header"></div>
 
   <main class="container">
+
     <section>
+
       <h2>Catálogo de conteúdos</h2>
-      <p style="color: var(--text-muted); margin-bottom: 1.25rem;">
+
+      <p>
         Encontre vídeos e materiais para estudar.
       </p>
 
-      <div style="margin-bottom: 1.5rem; max-width: 340px;">
-        <label for="filtro-categoria" style="display: block; margin-bottom: 0.4rem;">
+      <!-- Botão exclusivo para professores e administradores -->
+      <div id="area-cadastro-conteudo" hidden>
+        <a href="/pages/novo-conteudo.html" class="btn">
+          + Novo conteúdo
+        </a>
+      </div>
+
+      <!-- Filtro por categoria -->
+      <div>
+        <label for="filtro-categoria">
           Filtrar por categoria:
         </label>
+
         <select id="filtro-categoria">
           <option value="">Todas as categorias</option>
         </select>
       </div>
 
-      <p id="mensagem" class="mensagem" role="status" aria-live="polite"></p>
+      <!-- Mensagens do sistema -->
+      <p
+        id="mensagem"
+        class="mensagem"
+        role="status"
+        aria-live="polite"
+      ></p>
 
-      <!-- Mantido o ID original da Equipe 2 + classe .grid do Design System -->
-      <section id="lista-conteudos" class="grid" aria-label="Lista de conteúdos">
-        <!-- Os conteúdos serão carregados pelo JavaScript. -->
+      <!-- Lista de conteúdos -->
+      <section
+        id="lista-conteudos"
+        class="grid"
+        aria-label="Lista de conteúdos"
+      >
+        <!-- Conteúdos carregados pelo JavaScript -->
       </section>
+
     </section>
+
   </main>
 
-  <!-- Rodapé Institucional Único (Injetado pelo layout.js) -->
+  <!-- Rodapé injetado pelo layout.js -->
   <div id="app-footer"></div>
 
-  <!-- Scripts do Sistema e da Equipe 2 -->
+  <!-- Scripts do sistema -->
   <script src="/assets/js/layout.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/assets/js/supabase-config.js"></script>
