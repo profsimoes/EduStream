@@ -49,6 +49,11 @@
   }
 
   const TAMANHO_MINIMO_SENHA = 6;        // mínimo de caracteres da senha
+
+  // Limites iguais aos da tabela "usuario" (colunas varchar)
+  const MAX_NOME = 100;                  // nome  varchar(100)
+  const MAX_EMAIL = 150;                 // email varchar(150)
+  const MAX_SENHA = 255;                 // senha varchar(255)
   const TIPO_PERFIL_PADRAO = 'aluno';    // todo novo cadastro entra como aluno
   const PAGINA_LOGIN = '/pages/login.html';
   const TEMPO_REDIRECIONAMENTO = 2000;   // 2000 ms = 2 segundos
@@ -99,6 +104,16 @@
     // 1) Nenhum campo pode estar vazio
     if (!nome || !email || !senha || !confirmarSenha) {
       return 'Preencha todos os campos.';
+    }
+    // 1.1) Tamanhos máximos aceitos pelo banco
+    if (nome.length > MAX_NOME) {
+      return 'O nome pode ter no máximo ' + MAX_NOME + ' caracteres.';
+    }
+    if (email.length > MAX_EMAIL) {
+      return 'O e-mail pode ter no máximo ' + MAX_EMAIL + ' caracteres.';
+    }
+    if (senha.length > MAX_SENHA) {
+      return 'A senha pode ter no máximo ' + MAX_SENHA + ' caracteres.';
     }
     // 2) E-mail com formato válido
     if (!emailEhValido(email)) {
@@ -181,7 +196,9 @@
       return 'id_perfil não existe na tabela perfil. Detalhe: ' + texto;
     }
     if (codigo === '23505') {
-      return 'Registro duplicado (e-mail ou id já existe). Detalhe: ' + texto;
+      // constraint uq_usuario_email: outro cadastro com o mesmo e-mail foi feito
+      // entre a verificação e a gravação
+      return 'Este e-mail já está cadastrado.';
     }
     if (codigo === '23514') {
       return 'Valor recusado por regra do banco (ex.: tipo_perfil). Detalhe: ' + texto;
