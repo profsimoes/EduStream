@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduStream - Player de Conteúdo</title>
+  <!-- Importação do CSS institucional único -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+  <!-- O cabeçalho será injetado automaticamente pelo layout.js -->
+  <div id="app-header"></div>
+
+  <main class="container">
+    <!-- Caixa de mensagens para avisos e erros -->
+    <div id="mensagem-player" class="mensagem"></div>
+
+    <!-- Área principal do conteúdo -->
+    <section class="card">
+      <div class="badge" id="badge-categoria">Carregando categoria...</div>
+      <h1 id="titulo-conteudo">Carregando título...</h1>
+      <p id="descricao-conteudo">Aguarde enquanto buscamos os detalhes da aula.</p>
+
+      <!-- Container onde o vídeo/link será carregado dinamicamente -->
+      <div id="area-midia"></div>
+
+      <!-- Controles de progresso e navegação -->
+      <div class="form-box">
+        <p id="status-progresso">Progresso salvo: 0s</p>
+        <button id="btn-concluir" class="btn">Marcar como Concluído</button>
+        <a href="/pages/continuar.html" class="btn btn-secondary">Voltar para Continuar Assistindo</a>
+      </div>
+    </section>
+
+    <!-- Seção para o aluno avaliar o conteúdo (Tabela: avaliacao) -->
+    <section class="card">
+      <h2>Avalie esta aula</h2>
+      <form id="form-avaliacao" class="form-box">
+        <label for="nota">Nota (1 a 5):</label>
+        <select id="nota" required>
+          <option value="5">5 - Excelente</option>
+          <option value="4">4 - Muito Bom</option>
+          <option value="3">3 - Bom</option>
+          <option value="2">2 - Regular</option>
+          <option value="1">1 - Precisa melhorar</option>
+        </select>
+
+        <label for="comentario">Comentário (opcional):</label>
+        <textarea id="comentario" rows="3" placeholder="O que você achou deste conteúdo?"></textarea>
+
+        <button type="submit" class="btn">Enviar Avaliação</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- O rodapé será injetado automaticamente pelo layout.js -->
+  <div id="app-footer"></div>
+
+  <!-- Scripts obrigatórios na ordem correta -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase-config.js"></script>
+  <script src="/assets/js/supabase-client.js"></script>
+  <script src="/assets/js/layout.js"></script>
+
+  <!-- Lógica específica da página player.html -->
+  <script>
+    // 1. Pegamos os dados do usuário logado salvos no navegador pelo login
+    const usuarioLogado = JSON.parse(localStorage.getItem('edustream_usuario'));
+
+    // 2. Pegamos o ID do conteúdo pela URL (Ex: player.html?id=10)
+    const parametrosUrl = new URLSearchParams(window.location.search);
+    const idConteudo = parametrosUrl.get('id');
+
+    // Variáveis de controle do histórico
+    let idHistoricoAtual = null;
+    let segundosAssistidos = 0;
+    let intervaloProgresso = null;
+
+    // Referências aos elementos HTML
+    const msgBox = document.getElementById('mensagem-player');
+    const areaMidia = document.getElementById('area-midia');
+    const statusProgresso = document.getElementById('status-progresso');
+
+    // Função auxiliar para mostrar avisos na tela
+    function exibirMensagem(texto) {
+      msgBox.textContent = texto;
+    }
+
+    // Função principal que roda assim que a página abre
+    async function iniciarPlayer() {
+      if (!idConteudo) {
+        exibirMensagem('Erro: Nenhum conteúdo foi selecionado.');
+        return;
+      }
+
+      // Busca os dados do conteúdo e o nome da categoria no Supabase
+      const { data: conteudo, error } = await supabaseClient
+        .from('conteudo')
+        .select('*, categoria(nome)')
+        .eq('id_conteudo', idConteudo)
+        .single();
+
+      if (error || !conteudo) {
+        exibirMensagem('Erro ao carregar o conteúdo do banco de dados.');
+        console.error(error);
+        return;
+      }
+
+      // Preenche os textos na tela
+      document.getElementById('titulo-conteudo').textContent = conteudo.titulo;
+      document.getElementById('descricao-conteudo').textContent = conteudo.descricao || 'Sem descrição.';
+      document.getElementById('badge-categoria').textContent = conteudo.categoria ? conteudo.categoria.nome : 'Geral';
+
+      // Verifica se o aluno já começou a assistir esse conteúdo antes
+      await verificarHistoricoExistente();
+
+      // Renderiza o player de acordo com o tipo de conteúdo
+      renderizarMidia(conteudo);
+    }
+
+    // Busca na tabela 'historico_visualizacao' onde o aluno parou
+    async function verificarHistoricoExistente() {
+      const { data: historico, error } = await supabaseClient
+        .from('historico_visualizacao')
+        .select('*')
+        .eq('id_usuario', usuarioLogado.id_usuario)
+        .eq('id_conteudo', idConteudo)
+        .maybeSingle();
+
+      if (historico) {
+        // Se já existe registro, recuperamos o ID e o tempo onde parou
+        idHistoricoAtual = historico.id_historico;
+        segundosAssistidos = historico.segundos_assistidos || 0;
+        statusProgresso.textContent = `Retomando de: ${segundosAssistidos} segundos`;
+      } else {
+        // Se é a primeira vez, criamos um registro inicial no banco
+        const { data: novoHistorico } = await supabaseClient
+          .from('historico_visualizacao')
+          .insert([{
+            id_usuario: usuarioLogado.id_usuario,
+            id_conteudo: idConteudo,
+            segundos_assistidos: 0,
+            concluido: false
+          }])
+          .select()
+          .single();
+
+        if (novoHistorico) {
+          idHistoricoAtual = novoHistorico.id_historico;
+        }
+      }
+    }
+
+    // Monta o player na tela (suporta vídeo MP4 direto ou links externos/YouTube)
+    function renderizarMidia(conteudo) {
+      const link = conteudo.link_conteudo;
+
+      if (link.endsWith('.mp4') || conteudo.tipo === 'video') {
+        // Cria um player de vídeo HTML5 nativo
+        const video = document.createElement('video');
+        video.src = link;
+        video.controls = true;
+        video.width = 640;
+
+        // Quando o vídeo carregar, pula exatamente para o segundo onde o aluno parou
+        video.addEventListener('loadedmetadata', () => {
+          video.currentTime = segundosAssistidos;
+        });
+
+        // Salva o progresso no Supabase a cada 5 segundos enquanto o vídeo toca
+        video.addEventListener('timeupdate', () => {
+          const segundoAtual = Math.floor(video.currentTime);
+          if (segundoAtual > 0 && segundoAtual % 5 === 0 && segundoAtual !== segundosAssistidos) {
+            segundosAssistidos = segundoAtual;
+            atualizarProgressoNoBanco(segundosAssistidos, false);
+          }
+        });
+
+        // Quando o vídeo terminar, marca automaticamente como concluído
+        video.addEventListener('ended', () => {
+          atualizarProgressoNoBanco(Math.floor(video.duration), true);
+        });
+
+        areaMidia.appendChild(video);
+      } else {
+        // Caso seja um link de PDF, artigo ou embed externo
+        const linkBtn = document.createElement('a');
+        linkBtn.href = link;
+        linkBtn.target = '_blank';
+        linkBtn.className = 'btn';
+        linkBtn.textContent = 'Abrir Material Externo';
+        areaMidia.appendChild(linkBtn);
+
+        // Inicia um contador de tempo na página para salvar progresso de leitura
+        intervaloProgresso = setInterval(() => {
+          segundosAssistidos += 10;
+          atualizarProgressoNoBanco(segundosAssistidos, false);
+        }, 10000);
+      }
+    }
+
+    // Atualiza a tabela 'historico_visualizacao' com o tempo atual
+    async function atualizarProgressoNoBanco(segundos, foiConcluido) {
+      if (!idHistoricoAtual) return;
+
+      const { error } = await supabaseClient
+        .from('historico_visualizacao')
+        .update({
+          segundos_assistidos: segundos,
+          concluido: foiConcluido,
+          data_hora_acesso: new Date().toISOString()
+        })
+        .eq('id_historico', idHistoricoAtual);
+
+      if (!error) {
+        statusProgresso.textContent = foiConcluido
+          ? 'Aula concluída!'
+          : `Progresso salvo: ${segundos} segundos`;
+      }
+    }
+
+    // Botão manual para marcar como concluído
+    document.getElementById('btn-concluir').addEventListener('click', () => {
+      if (intervaloProgresso) clearInterval(intervaloProgresso);
+      atualizarProgressoNoBanco(segundosAssistidos, true);
+      exibirMensagem('Parabéns! Conteúdo marcado como concluído.');
+    });
+
+    // Envio do formulário de avaliação para a tabela 'avaliacao'
+    document.getElementById('form-avaliacao').addEventListener('submit', async (evento) => {
+      evento.preventDefault(); // Evita recarregar a página
+
+      const notaSelecionada = parseInt(document.getElementById('nota').value);
+      const textoComentario = document.getElementById('comentario').value;
+
+      const { error } = await supabaseClient
+        .from('avaliacao')
+        .insert([{
+          id_usuario: usuarioLogado.id_usuario,
+          id_conteudo: idConteudo,
+          nota: notaSelecionada,
+          comentario: textoComentario
+        }]);
+
+      if (error) {
+        exibirMensagem('Erro ao enviar avaliação.');
+        console.error(error);
+      } else {
+        exibirMensagem('Avaliação enviada com sucesso!');
+        document.getElementById('form-avaliacao').reset();
+      }
+    });
+
+    // Inicia tudo ao carregar a página
+    iniciarPlayer();
+  </script>
+</body>
+</html>
