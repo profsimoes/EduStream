@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Novo Conteúdo | EduStream</title>
+
+    <!-- CSS institucional -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+
+<body>
+
+    <!-- Cabeçalho automático -->
+    <div id="app-header"></div>
+
+    <main class="container">
+
+        <h1>Cadastrar novo conteúdo</h1>
+
+        <p>
+            Adicione materiais educacionais para compartilhar
+            com os estudantes da plataforma EduStream.
+        </p>
+
+        <section class="form-box">
+
+            <form id="form-cadastro-conteudo">
+
+                <!-- Título -->
+                <label for="titulo">Título do conteúdo</label>
+
+                <input
+                    type="text"
+                    id="titulo"
+                    name="titulo"
+                    placeholder="Digite o título"
+                    maxlength="255"
+                    required
+                >
+
+                <!-- Descrição -->
+                <label for="descricao">Descrição</label>
+
+                <textarea
+                    id="descricao"
+                    name="descricao"
+                    rows="5"
+                    placeholder="Descreva o conteúdo educacional"
+                    required
+                ></textarea>
+
+                <!-- Tipo -->
+                <label for="tipo">Tipo de conteúdo</label>
+
+                <select
+                    id="tipo"
+                    name="tipo"
+                    required
+                >
+                    <option value="">Selecione o tipo</option>
+                    <option value="video">Vídeo</option>
+                    <option value="documento">Documento</option>
+                    <option value="link">Link</option>
+                    <option value="aula">Aula</option>
+                    <option value="outro">Outro</option>
+                </select>
+
+                <!-- Link -->
+                <label for="link_conteudo">Link do conteúdo</label>
+
+                <input
+                    type="url"
+                    id="link_conteudo"
+                    name="link_conteudo"
+                    placeholder="https://exemplo.com"
+                    required
+                >
+
+                <!-- Categoria -->
+                <label for="id_categoria">Categoria</label>
+
+                <select
+                    id="id_categoria"
+                    name="id_categoria"
+                    required
+                >
+                    <option value="">Carregando categorias...</option>
+                </select>
+
+                <!-- Duração -->
+                <label for="duracao_segundos">
+                    Duração em segundos (opcional)
+                </label>
+
+                <input
+                    type="number"
+                    id="duracao_segundos"
+                    name="duracao_segundos"
+                    min="0"
+                    step="1"
+                    placeholder="Ex.: 600"
+                >
+
+                <!-- Botão -->
+                <button
+                    type="submit"
+                    id="btn-cadastrar"
+                    class="btn"
+                >
+                    Cadastrar conteúdo
+                </button>
+
+            </form>
+
+            <!-- Mensagens de sucesso ou erro -->
+            <div
+                id="mensagem"
+                class="mensagem"
+                aria-live="polite"
+            ></div>
+
+        </section>
+
+    </main>
+
+    <!-- Rodapé automático -->
+    <div id="app-footer"></div>
+
+    <!-- Scripts do projeto -->
+    <script src="/assets/js/supabase-config.js"></script>
+    <script src="/assets/js/supabase-client.js"></script>
+    <script src="/assets/js/layout.js"></script>
+    <script src="/assets/js/cadastro-conteudo.js"></script>
+
+</body>
+
+</html>
