@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuários | EduStream</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+  <!-- Cabeçalho injetado automaticamente pelo layout.js -->
+  <div id="app-header"></div>
+
+  <main class="container">
+    <h1>Gerenciar Usuários</h1>
+
+    <!-- Área de mensagens (sucesso ou erro) -->
+    <div id="mensagem" class="mensagem"></div>
+
+    <!-- Busca e filtro -->
+    <section class="form-box">
+      <label for="campo-busca">Buscar por nome ou e-mail</label>
+      <input type="text" id="campo-busca" placeholder="Digite para buscar...">
+
+      <label for="filtro-perfil">Filtrar por perfil</label>
+      <select id="filtro-perfil">
+        <option value="">Todos os perfis</option>
+      </select>
+    </section>
+
+    <!-- Os cards dos usuários são criados pelo usuarios.js -->
+    <section id="lista-usuarios" class="grid"></section>
+  </main>
+
+  <!-- Rodapé injetado automaticamente pelo layout.js -->
+  <div id="app-footer"></div>
+
+  <!-- Biblioteca do Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Conexão com o banco -->
+  <script src="/assets/js/supabase-config.js"></script>
+  <script src="/assets/js/supabase-client.js"></script>
+  <!-- Layout e bloqueio de páginas privadas -->
+  <script src="/assets/js/layout.js"></script>
+  <!-- Script desta página (Equipe 1) -->
+  <script src="/assets/js/equipe1/usuarios.js"></script>
+</body>
+</html>
