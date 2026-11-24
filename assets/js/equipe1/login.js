@@ -22,10 +22,9 @@
 
   // ---------------------------------------------------
   // 2) Cliente do Supabase (já criado em supabase-client.js)
-  // ATENÇÃO: se o nome da variável lá for outro, troque
-  // "supabaseClient" abaixo pelo nome correto.
+  // No projeto, o cliente se chama "db".
   // ---------------------------------------------------
-  const conexao = (typeof supabaseClient !== "undefined") ? supabaseClient : null;
+  const conexao = (typeof db !== "undefined") ? db : null;
 
   // ---------------------------------------------------
   // 3) Função auxiliar: mostrar mensagem na tela
@@ -52,7 +51,7 @@
 
     // Confere se o cliente do Supabase foi encontrado
     if (!conexao) {
-      exibirMensagem("Erro: cliente do Supabase não encontrado. Verifique o nome da variável no login.js.");
+      exibirMensagem("Erro: cliente do Supabase (db) não encontrado. Verifique a ordem dos scripts no HTML.");
       return;
     }
 
