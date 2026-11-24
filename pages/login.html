@@ -3,35 +3,57 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduStream</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
+  <title>EduStream - Entrar</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
+
   <!-- Página de login: o formulário é tratado por assets/js/equipe1/login.js -->
-  <main class="login-container">
-    <h1>Entrar no EduStream</h1>
- 
-    <form id="formulario-login">
-      <label for="campo-email">E-mail</label>
-      <input type="email" id="campo-email" name="email" placeholder="seuemail@exemplo.com" required>
- 
-      <label for="campo-senha">Senha</label>
-      <input type="password" id="campo-senha" name="senha" placeholder="Digite sua senha" required>
- 
-      <button type="submit" id="botao-entrar">Entrar</button>
+  <main class="container login-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    
+    <!-- Logo Oficial do EduStream em destaque -->
+    <div style="margin-bottom: 1.25rem; text-align: center;">
+      <img src="/assets/img/logo_edustream2.png" alt="Logo EduStream" style="height: 64px; width: auto; border-radius: 10px; box-shadow: 0 8px 20px rgba(11, 142, 54, 0.3);">
+    </div>
+
+    <form id="formulario-login" style="width: 100%; max-width: 420px; margin-top: 0;">
+      <h2 style="margin-bottom: 0.5rem;">Entrar no EduStream</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.5rem;">
+        Acesse com sua conta institucional para acompanhar suas aulas.
+      </p>
+
+      <div>
+        <label for="campo-email" style="display: block; margin-bottom: 0.35rem;">E-mail</label>
+        <input type="email" id="campo-email" name="email" placeholder="seuemail@exemplo.com" required>
+      </div>
+
+      <div>
+        <label for="campo-senha" style="display: block; margin-bottom: 0.35rem;">Senha</label>
+        <input type="password" id="campo-senha" name="senha" placeholder="Digite sua senha" required>
+      </div>
+
+      <button type="submit" id="botao-entrar" style="margin-top: 0.5rem;">Entrar</button>
+
+      <!-- Aqui o login.js mostra mensagens de erro ou sucesso -->
+      <p id="mensagem-login" class="mensagem" role="alert" style="margin-bottom: 0;"></p>
+
+      <p style="text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">
+        Ainda não tem conta? 
+        <a href="cadastro.html" style="color: var(--verde-hover); font-weight: 700; text-decoration: none;">Cadastre-se</a>
+      </p>
     </form>
- 
-    <!-- Aqui o login.js mostra mensagens de erro ou sucesso -->
-    <p id="mensagem-login" role="alert"></p>
- 
-    <p>Ainda não tem conta? <a href="cadastro.html">Cadastre-se</a></p>
+
   </main>
- 
+
+  <!-- Rodapé Institucional Único (Injetado pelo layout.js) -->
+  <div id="app-footer"></div>
+
+  <script src="/assets/js/layout.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../assets/js/supabase-config.js"></script>
-  <script src="../assets/js/supabase-client.js"></script>
-  <script src="../assets/js/utils.js"></script>
-  <script src="../assets/js/equipe1/login.js"></script>
+  <script src="/assets/js/supabase-config.js"></script>
+  <script src="/assets/js/supabase-client.js"></script>
+  <script src="/assets/js/utils.js"></script>
+  <script src="/assets/js/equipe1/login.js"></script>
+
 </body>
 </html>
- 
