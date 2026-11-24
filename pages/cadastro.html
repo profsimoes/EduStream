@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cadastro - EduStream</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+  <!-- Tela pública: sem cabeçalho, apenas o rodapé injetado pelo layout.js -->
+  <main class="container">
+    <form id="form-cadastro" class="form-box" novalidate>
+      <h1>Criar conta</h1>
+
+      <label for="nome">Nome</label>
+      <input type="text" id="nome" autocomplete="name">
+
+      <label for="email">E-mail</label>
+      <input type="email" id="email" autocomplete="email">
+
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" autocomplete="new-password">
+
+      <label for="confirmar-senha">Confirmar senha</label>
+      <input type="password" id="confirmar-senha" autocomplete="new-password">
+
+      <div id="mensagem" class="mensagem"></div>
+
+      <button type="submit" class="btn">Cadastrar</button>
+      <a href="/pages/login.html" class="btn btn-secondary">Já tenho conta</a>
+    </form>
+  </main>
+
+  <div id="app-footer"></div>
+
+  <!-- Scripts: respeite esta ordem -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/assets/js/supabase-config.js"></script>
+  <script src="/assets/js/supabase-client.js"></script>
+  <script src="/assets/js/layout.js"></script>
+  <script src="/assets/js/equipe1/cadastro.js"></script>
+</body>
+</html>
