@@ -5,38 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduStream - Avaliações</title>
 
-  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
 
-  <main class="pagina-avaliacoes">
+  <!-- Cabeçalho Único (Injetado pelo layout.js) -->
+  <div id="app-header"></div>
 
-    <header class="cabecalho-pagina">
-      <h1>Avaliar conteúdos</h1>
-      <p>
+  <main class="container pagina-avaliacoes">
+
+    <!-- Trocado de <header> para <div> para não conflitar com o menu principal -->
+    <div class="cabecalho-pagina">
+      <h2>Avaliar conteúdos</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
         Compartilhe sua opinião sobre os conteúdos que você concluiu.
       </p>
-    </header>
+    </div>
 
     <section class="secao-avaliacoes">
 
-      <h2>Conteúdos disponíveis para avaliação</h2>
+      <h3 style="margin-bottom: 1rem;">Conteúdos disponíveis para avaliação</h3>
 
       <div id="mensagem-avaliacoes" class="mensagem" role="status">
         Carregando conteúdos...
       </div>
 
-      <div id="lista-conteudos-avaliar" class="lista-avaliacoes"></div>
+      <!-- Mantido o ID original da Equipe 4 + classe .grid do Design System -->
+      <div id="lista-conteudos-avaliar" class="grid lista-avaliacoes"></div>
 
     </section>
 
   </main>
 
+  <!-- Rodapé Institucional Único (Injetado pelo layout.js) -->
+  <div id="app-footer"></div>
+
+  <!-- Scripts do Sistema e da Equipe 4 -->
+  <script src="/assets/js/layout.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../assets/js/supabase-config.js"></script>
-  <script src="../assets/js/supabase-client.js"></script>
-  <script src="../assets/js/utils.js"></script>
-  <script src="../assets/js/equipe4/avaliacoes.js"></script>
+  <script src="/assets/js/supabase-config.js"></script>
+  <script src="/assets/js/supabase-client.js"></script>
+  <script src="/assets/js/utils.js"></script>
+  <script src="/assets/js/equipe4/avaliacoes.js"></script>
 
 </body>
 </html>
