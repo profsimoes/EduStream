@@ -5,32 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduStream - Conteúdos mais bem avaliados</title>
 
-  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
 
-  <main class="pagina-recomendados">
-    <header class="cabecalho-pagina">
-      <h1>Conteúdos recomendados</h1>
-      <p>Confira os conteúdos mais bem avaliados pelos alunos.</p>
-    </header>
+  <!-- Cabeçalho Único (Injetado pelo layout.js) -->
+  <div id="app-header"></div>
+
+  <main class="container pagina-recomendados">
+    <!-- Trocado de <header> para <div> para não conflitar com o menu principal -->
+    <div class="cabecalho-pagina">
+      <h2>Conteúdos recomendados</h2>
+      <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+        Confira os conteúdos mais bem avaliados pelos alunos.
+      </p>
+    </div>
 
     <section class="secao-ranking">
-      <h2>Ranking por nota média</h2>
+      <h3 style="margin-bottom: 1rem;">Ranking por nota média</h3>
 
       <div id="mensagem-ranking" class="mensagem" role="status">
         Carregando ranking...
       </div>
 
-      <div id="lista-ranking" class="lista-ranking"></div>
+      <!-- Mantido o ID original da Equipe 4 + classe .grid do Design System -->
+      <div id="lista-ranking" class="grid lista-ranking"></div>
     </section>
   </main>
 
+  <!-- Rodapé Institucional Único (Injetado pelo layout.js) -->
+  <div id="app-footer"></div>
+
+  <!-- Scripts do Sistema e da Equipe 4 -->
+  <script src="/assets/js/layout.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="../assets/js/supabase-config.js"></script>
-  <script src="../assets/js/supabase-client.js"></script>
-  <script src="../assets/js/utils.js"></script>
-  <script src="../assets/js/equipe4/recomendados.js"></script>
+  <script src="/assets/js/supabase-config.js"></script>
+  <script src="/assets/js/supabase-client.js"></script>
+  <script src="/assets/js/utils.js"></script>
+  <script src="/assets/js/equipe4/recomendados.js"></script>
 
 </body>
 </html>
