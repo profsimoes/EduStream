@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduStream</title>
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/equipe1.css">
+</head>
+<body>
+  <!-- Página de login: o formulário é tratado por assets/js/equipe1/login.js -->
+  <main class="login-container">
+    <h1>Entrar no EduStream</h1>
+ 
+    <form id="formulario-login">
+      <label for="campo-email">E-mail</label>
+      <input type="email" id="campo-email" name="email" placeholder="seuemail@exemplo.com" required>
+ 
+      <label for="campo-senha">Senha</label>
+      <input type="password" id="campo-senha" name="senha" placeholder="Digite sua senha" required>
+ 
+      <button type="submit" id="botao-entrar">Entrar</button>
+    </form>
+ 
+    <!-- Aqui o login.js mostra mensagens de erro ou sucesso -->
+    <p id="mensagem-login" role="alert"></p>
+ 
+    <p>Ainda não tem conta? <a href="cadastro.html">Cadastre-se</a></p>
+  </main>
+ 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase-config.js"></script>
+  <script src="../assets/js/supabase-client.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/equipe1/login.js"></script>
+</body>
+</html>
+ 
