@@ -21,7 +21,7 @@ EduStream/
 │       ├── utils.js
 │       ├── equipe1/
 │       │   ├── login.js               
-│       │   ├── cadastro.js            (A criar)
+│       │   ├── cadastro.js            
 │       │   └── usuarios.js            (A criar)
 │       ├── equipe2/
 │       │   ├── conteudos.js           (A criar)
