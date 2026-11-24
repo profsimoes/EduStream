@@ -502,3 +502,63 @@ async function iniciarPaginaConteudos() {
 
 // Executa a inicialização.
 iniciarPaginaConteudos();
+
+
+
+/*
+=========================================================
+ EDUSTREAM - CONTROLE DO BOTÃO NOVO CONTEÚDO
+
+ O botão será exibido somente para:
+ - professor
+ - admin
+
+ O perfil é verificado pelo objeto edustream_usuario
+ armazenado no localStorage.
+=========================================================
+*/
+
+function controlarBotaoNovoConteudo() {
+    const areaCadastro = document.getElementById(
+        "area-cadastro-conteudo"
+    );
+
+    if (!areaCadastro) return;
+
+    // Por padrão, o botão permanece oculto.
+    areaCadastro.hidden = true;
+
+    try {
+        // Recupera o usuário salvo no navegador.
+        const usuarioSalvo = localStorage.getItem(
+            "edustream_usuario"
+        );
+
+        if (!usuarioSalvo) return;
+
+        // Converte o texto JSON em objeto JavaScript.
+        const usuario = JSON.parse(usuarioSalvo);
+
+        // Obtém o perfil do usuário.
+        const perfil = String(
+            usuario.tipo_perfil || ""
+        ).trim().toLowerCase();
+
+        // Libera o botão somente para os perfis autorizados.
+        if (perfil === "admin" || perfil === "professor") {
+            areaCadastro.hidden = false;
+        }
+
+    } catch (erro) {
+        console.error(
+            "Erro ao verificar perfil do usuário:",
+            erro
+        );
+
+        areaCadastro.hidden = true;
+    }
+}
+
+// Executa a verificação.
+controlarBotaoNovoConteudo();
+
