@@ -2,42 +2,24 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduStream - Continuar Assistindo</title>
   <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
-
-  <!-- Cabeçalho Único (Injetado pelo layout.js) -->
   <div id="app-header"></div>
 
-  <main class="container conteudo-principal">
-    <section class="secao-continuar">
-      <h2>Continuar Assistindo</h2>
-      <p class="descricao-pagina" style="color: var(--text-muted); margin-bottom: 1.5rem;">
-        Retome seus vídeos e conteúdos de onde parou.
-      </p>
-
-      <!-- Mensagem de feedback/erro para o usuário -->
-      <div id="mensagem-status" class="mensagem mensagem-status" style="display: none;"></div>
-
-      <!-- Container onde a lista de conteúdos será renderizada -->
-      <div id="lista-continuar" class="grid grid-card-conteudo">
-        <p class="carregando" style="color: var(--text-muted);">Carregando seus conteúdos...</p>
-      </div>
-    </section>
+  <main class="container">
+    <h1>Continuar Assistindo</h1>
+    <div id="mensagem-continuar" class="mensagem"></div>
+    <section id="lista-continuar" class="grid"></section>
   </main>
 
-  <!-- Rodapé Institucional Único (Injetado pelo layout.js) -->
   <div id="app-footer"></div>
 
-  <!-- Scripts do Sistema e da Equipe 3 -->
-  <script src="/assets/js/layout.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/assets/js/supabase-config.js"></script>
   <script src="/assets/js/supabase-client.js"></script>
-  <script src="/assets/js/utils.js"></script>
-  <script src="/assets/js/equipe3/continuar.js"></script>
-
+  <script src="/assets/js/layout.js"></script>
+  <script src="/assets/js/continuar.js"></script>
 </body>
 </html>
