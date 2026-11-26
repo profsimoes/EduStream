@@ -7,14 +7,12 @@
    2. Pesquisar usuários     5. Excluir usuários
    3. Ver informações        6. Tipos de usuário (permissões)
    7. Controle de acesso (somente administrador)
-   ========================================================== */
 
-// ----------------------------------------------------------
-// 0. CONEXÃO COM O SUPABASE
-// ----------------------------------------------------------
-// ATENÇÃO: troque "supabaseClient" pelo nome da variável que foi
-// criada em supabase-config.js / supabase-client.js, se for diferente.
-const db = supabaseClient;
+   IMPORTANTE: o cliente do Supabase (variável "db") já é criado em
+   /assets/js/supabase-client.js. Aqui só USAMOS o "db".
+   Este arquivo deve ser carregado DEPOIS do supabase-client.js
+   e no FINAL do <body>, depois dos elementos da página.
+   ========================================================== */
 
 // ----------------------------------------------------------
 // 1. VARIÁVEIS GLOBAIS
@@ -76,6 +74,8 @@ function nomeDoTipo(tipo) {
 // ----------------------------------------------------------
 // O layout.js já garante que existe um usuário logado.
 // Aqui verificamos se ele é ADMINISTRADOR.
+// (Esta checagem é só visual. A proteção de verdade precisa
+//  ser feita no banco, com RLS do Supabase.)
 function verificarPermissao() {
   try {
     usuarioLogado = JSON.parse(localStorage.getItem('edustream_usuario'));
@@ -95,6 +95,7 @@ function verificarPermissao() {
 // ----------------------------------------------------------
 // 4. LISTAR USUÁRIOS (funcionalidades 1 e 3)
 // ----------------------------------------------------------
+// Devolve true se carregou certo e false se deu erro
 async function carregarUsuarios() {
   limparMensagem();
 
@@ -107,32 +108,45 @@ async function carregarUsuarios() {
 
   if (error) {
     mostrarMensagem('Erro ao carregar usuários: ' + error.message);
-    return;
+    return false;
   }
 
   listaUsuarios = data;
   await carregarPrimeirosAcessos();
   mostrarUsuarios(listaUsuarios);
+  return true;
 }
 
 // A tabela "usuario" não tem coluna de data de cadastro.
 // Por isso usamos o log_acesso: a data do 1º acesso de cada usuário.
+// O Supabase devolve no máximo 1000 linhas por consulta, então
+// buscamos em "páginas" de 1000 até acabar os registros.
 async function carregarPrimeirosAcessos() {
   primeiroAcesso = {};
 
-  const { data, error } = await db
-    .from('log_acesso')
-    .select('id_usuario, data_hora')
-    .order('data_hora', { ascending: true }); // do mais antigo ao mais novo
+  const tamanhoPagina = 1000;
+  let inicio = 0;
 
-  if (error) return; // sem log, a data fica "Sem registro"
+  while (true) {
+    const { data, error } = await db
+      .from('log_acesso')
+      .select('id_usuario, data_hora')
+      .order('data_hora', { ascending: true }) // do mais antigo ao mais novo
+      .range(inicio, inicio + tamanhoPagina - 1);
 
-  // Como está em ordem, o primeiro registro de cada usuário é o mais antigo
-  data.forEach(function (log) {
-    if (!primeiroAcesso[log.id_usuario]) {
-      primeiroAcesso[log.id_usuario] = log.data_hora;
-    }
-  });
+    if (error || !data) return; // sem log, a data fica "Sem registro"
+
+    // Como está em ordem, o primeiro registro de cada usuário é o mais antigo
+    data.forEach(function (log) {
+      if (!primeiroAcesso[log.id_usuario]) {
+        primeiroAcesso[log.id_usuario] = log.data_hora;
+      }
+    });
+
+    // Se veio menos que uma página cheia, não há mais registros
+    if (data.length < tamanhoPagina) return;
+    inicio += tamanhoPagina;
+  }
 }
 
 // Cria uma linha "Rótulo: valor" dentro de um card
@@ -248,6 +262,9 @@ function cancelarEdicao() {
 async function salvarEdicao() {
   limparMensagem();
 
+  // Se nenhum usuário foi escolhido, não há o que salvar
+  if (idEmEdicao === null) return;
+
   const nome = elEditNome.value.trim();
   const email = elEditEmail.value.trim();
   const tipo = elEditTipo.value;
@@ -268,14 +285,43 @@ async function salvarEdicao() {
     return;
   }
 
-  // Atualiza SOMENTE o usuário escolhido (.eq = "onde id_usuario é igual a")
-  const { error } = await db
+  // Descobre o id_perfil que corresponde ao tipo escolhido.
+  // Assim "tipo_perfil" e "id_perfil" ficam sempre iguais no banco.
+  const { data: perfil, error: erroPerfil } = await db
+    .from('perfil')
+    .select('id_perfil')
+    .eq('nome_perfil', tipo)
+    .maybeSingle();
+
+  if (erroPerfil) {
+    mostrarMensagem('Erro ao buscar o perfil: ' + erroPerfil.message);
+    return;
+  }
+  if (!perfil) {
+    mostrarMensagem('O perfil "' + tipo + '" não existe na tabela perfil.');
+    return;
+  }
+
+  // Atualiza SOMENTE o usuário escolhido (.eq = "onde id_usuario é igual a").
+  // O .select() no final faz o banco devolver as linhas alteradas,
+  // para conferirmos se a alteração realmente aconteceu.
+  const { data: alterados, error } = await db
     .from('usuario')
-    .update({ nome: nome, email: email, tipo_perfil: tipo })
-    .eq('id_usuario', idEmEdicao);
+    .update({
+      nome: nome,
+      email: email,
+      tipo_perfil: tipo,
+      id_perfil: perfil.id_perfil
+    })
+    .eq('id_usuario', idEmEdicao)
+    .select('id_usuario');
 
   if (error) {
     mostrarMensagem('Erro ao salvar: ' + error.message);
+    return;
+  }
+  if (!alterados || alterados.length === 0) {
+    mostrarMensagem('Nada foi alterado. Verifique as permissões do banco (RLS).');
     return;
   }
 
@@ -287,8 +333,12 @@ async function salvarEdicao() {
   }
 
   cancelarEdicao();
-  await carregarUsuarios();
-  mostrarMensagem('Usuário atualizado com sucesso!');
+
+  // Só mostra "sucesso" se a lista foi recarregada sem erro
+  const recarregou = await carregarUsuarios();
+  if (recarregou) {
+    mostrarMensagem('Usuário atualizado com sucesso!');
+  }
 }
 
 // ----------------------------------------------------------
@@ -319,16 +369,28 @@ async function excluirUsuario(idUsuario, nome) {
     }
   }
 
-  // Agora sim, apaga o usuário
-  const { error } = await db.from('usuario').delete().eq('id_usuario', idUsuario);
+  // Agora sim, apaga o usuário. O .select() devolve a linha apagada,
+  // para conferirmos se a exclusão realmente aconteceu.
+  const { data: apagados, error } = await db
+    .from('usuario')
+    .delete()
+    .eq('id_usuario', idUsuario)
+    .select('id_usuario');
 
   if (error) {
     mostrarMensagem('Erro ao excluir usuário: ' + error.message);
     return;
   }
+  if (!apagados || apagados.length === 0) {
+    mostrarMensagem('Nada foi excluído. Verifique as permissões do banco (RLS).');
+    return;
+  }
 
-  await carregarUsuarios();
-  mostrarMensagem('Usuário excluído com sucesso!');
+  // Só mostra "sucesso" se a lista foi recarregada sem erro
+  const recarregou = await carregarUsuarios();
+  if (recarregou) {
+    mostrarMensagem('Usuário excluído com sucesso!');
+  }
 }
 
 // ----------------------------------------------------------
